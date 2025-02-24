@@ -9,13 +9,13 @@ import time
 def main(page: ft.Page):
     page.title = "YouTube Downloader"
     page.window_width = 600
-    page.window_height = 580  # Увеличил высоту для нового элемента
+    page.window_height = 580  
     page.window_resizable = False
     page.padding = 20
     page.theme_mode = ft.ThemeMode.DARK
     page.bgcolor = ft.colors.BLACK
 
-    # Элементы интерфейса
+    
     url_input = ft.TextField(
         label="URL видео или плейлиста",
         width=500,
@@ -56,7 +56,7 @@ def main(page: ft.Page):
         color=ft.colors.WHITE
     )
 
-    # Функция для выбора папки
+    
     def choose_folder(e):
         folder_picker = ft.FilePicker(on_result=lambda e: update_output_path(e))
         page.overlay.append(folder_picker)
@@ -68,7 +68,7 @@ def main(page: ft.Page):
             output_path.value = e.path
             page.update()
 
-    # Функция для оценки размера и общего объёма
+    
     def update_size(e):
         url = url_input.value
         resolution = resolution_dropdown.value
@@ -110,7 +110,7 @@ def main(page: ft.Page):
     url_input.on_change = update_size
     resolution_dropdown.on_change = update_size
 
-    # Функция скачивания
+    
     def download_content(url, output_path_value, resolution):
         try:
             if "playlist" in url.lower():
@@ -201,10 +201,10 @@ def main(page: ft.Page):
                 percentage = (bytes_downloaded / total_size) * 100
                 progress_bar.value = percentage / 100
 
-                # Расчёт скорости
+                
                 current_time = time.time()
                 time_diff = current_time - last_time
-                if time_diff > 0.5:  # Обновляем каждые 0.5 секунды
+                if time_diff > 0.5:
                     bytes_diff = bytes_downloaded - last_bytes
                     speed_mb_s = (bytes_diff / (1024 * 1024)) / time_diff
                     speed_label.value = f"Скорость: {speed_mb_s:.2f} MB/s"
@@ -215,7 +215,7 @@ def main(page: ft.Page):
             yt.register_on_progress_callback(progress_callback)
             video_stream.download(output_path_value)
 
-    # Функция запуска скачивания
+    
     def start_download():
         url = url_input.value
         output = output_path.value
@@ -238,7 +238,7 @@ def main(page: ft.Page):
         page.update()
         threading.Thread(target=download_content, args=(url, output, resolution), daemon=True).start()
 
-    # Сборка интерфейса
+    
     page.add(
         ft.Column(
             [
@@ -265,7 +265,7 @@ def main(page: ft.Page):
     )
 
 
-# Ссылка для видимости общего прогресса
+
 total_progress_label_ref = ft.Ref[ft.Text]()
 
 ft.app(target=main)
